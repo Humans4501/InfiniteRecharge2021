@@ -42,8 +42,8 @@ public class Auto1 extends SequentialCommandGroup {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     
-    super( new ParallelRaceGroup(new DriveForDistance(drivetrain, 1), new ConveyorForward(conveyor)),
-           new DriveForDistance(drivetrain, 0.9),
+    super( new ParallelRaceGroup(new DriveForDistance(drivetrain, 2), new ConveyorForward(conveyor)),
+           new DriveForDistance(drivetrain, 1.9),
            new ParallelRaceGroup(new Delay(1.5)),
           //  new ParallelRaceGroup(new DriveForDistance(drivetrain, 1), new ConveyorForward(conveyor)),
           //  new TurnToDegrees(drivetrain, 10),

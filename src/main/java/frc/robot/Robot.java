@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
   static double limelightA;
   static double limelightV;
 
-  SendableChooser<Command> chooser;
+  SendableChooser<Command> chooser = new SendableChooser<Command>();
   
 
   /**
@@ -57,6 +57,11 @@ public class Robot extends TimedRobot {
 
     RobotContainer.ahrs.reset();
 
+    chooser.addOption("Auto Trench", m_robotContainer.autoTrench);
+    chooser.addOption("Auto Switch", m_robotContainer.autoSwitch);
+
+    SmartDashboard.putData("auto chooser",chooser);
+  
     CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.drivetrain, m_robotContainer.drive);
     CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.climber, m_robotContainer.climb);
     CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.shooter, m_robotContainer.elevate);
@@ -141,7 +146,7 @@ public class Robot extends TimedRobot {
     return limelightV;
   }
 
-  public static void setLimelightLed(int status){
+  public static void setLimelightLed(final int status) {
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(status);
   }
   /**
@@ -170,10 +175,14 @@ public class Robot extends TimedRobot {
     // m_robotContainer.drivetrain.resetOdometry();
     RobotContainer.aimEncoder.reset();
 
+    m_autonomousCommand = chooser.getSelected();
+
     // schedule the autonomous command (example)
-    if (m_robotContainer.getAutonomousCommand() != null) {
-      m_robotContainer.getAutonomousCommand().schedule();
-    }
+    // if (m_robotContainer.getAutonomousCommand() != null) {
+    //   m_robotContainer.getAutonomousCommand().schedule();
+    // }
+
+      m_autonomousCommand.schedule();
   }
 
   /**

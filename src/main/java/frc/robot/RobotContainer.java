@@ -61,6 +61,9 @@ public class RobotContainer {
   public final Climb climb = new Climb(climber, xbox2);
   public final Elevate elevate = new Elevate(shooter, xbox);
   public static RamseteCommand ramseteCommand;
+  
+  public final Auto autoTrench = new Auto(drivetrain, intake_sub, conveyor, limelightAim, shooter, rpmFalcon1, rpmFalcon2);
+  public final Auto1 autoSwitch = new Auto1(drivetrain, intake_sub, conveyor, limelightAim, shooter, rpmFalcon1, rpmFalcon2);
   // public final Aim aim = new Aim(drivetrain, limelightAim);
   // public final ShootFalcon shootFalcon = new ShootFalcon(shooter, rpmFalcon1, rpmFalcon2);
   // public final Shoot shoot = new Shoot(shooter, xbox, joystick2);
@@ -114,6 +117,8 @@ public class RobotContainer {
     conveyShoot.whenReleased(new ConveyorStop(conveyor));
     intake.whileHeld(new Load(intake_sub));
     intake.whenReleased(new LoadStop(intake_sub));
+    intake.whileHeld(new ConveyorForward(conveyor));
+    intake.whenReleased(new ConveyorStop(conveyor));
     intakeReverse.whileHeld(new IntakeReverse(intake_sub));
     intakeReverse.whenReleased(new LoadStop(intake_sub));
     intake2.whileHeld(new Load(intake_sub));
@@ -132,35 +137,35 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-     var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(Constants.kFeedforward, Constants.differentialDriveKinematics,10);
+    //  var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(Constants.kFeedforward, Constants.differentialDriveKinematics,10);
 
 
-    Trajectory trajectory = null;
-    // Create config for trajectory
-    TrajectoryConfig config = new TrajectoryConfig(Constants.kMaxSpeedMetersPerSecond,
-        Constants.kMaxAccelerationMetersPerSecondSquared)
-            // Add kinematics to ensure max speed is actually obeyed
-            .setKinematics(Constants.differentialDriveKinematics).addConstraint(autoVoltageConstraint);
+    // Trajectory trajectory = null;
+    // // Create config for trajectory
+    // TrajectoryConfig config = new TrajectoryConfig(Constants.kMaxSpeedMetersPerSecond,
+    //     Constants.kMaxAccelerationMetersPerSecondSquared)
+    //         // Add kinematics to ensure max speed is actually obeyed
+    //         .setKinematics(Constants.differentialDriveKinematics).addConstraint(autoVoltageConstraint);
 
-    // An example trajectory to follow. All units in meters.
+    // // An example trajectory to follow. All units in meters.
     
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-        // Start at the origin facing the +X direction
-        new Pose2d(0, 0, new Rotation2d(0)),
-        // Pass through these two interior waypoints, making an 's' curve path
-        List.of(
-            new Translation2d(1, 1),
-            new Translation2d(2, -1)
-        ),
-        // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(3, 0, new Rotation2d(0)),
-        // Pass config
-        config
-    );
+    // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+    //     // Start at the origin facing the +X direction
+    //     new Pose2d(0, 0, new Rotation2d(0)),
+    //     // Pass through these two interior waypoints, making an 's' curve path
+    //     List.of(
+    //         new Translation2d(1, 1),
+    //         new Translation2d(2, -1)
+    //     ),
+    //     // End 3 meters straight ahead of where we started, facing forward
+    //     new Pose2d(3, 0, new Rotation2d(0)),
+    //     // Pass config
+    //     config
+    // );
 
-    ramseteCommand = new RamseteCommand(exampleTrajectory, drivetrain::getPose, new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta), 
-    Constants.kFeedforward, Constants.differentialDriveKinematics, drivetrain::getWheelSpeeds, new PIDController(Constants.kPDriveVel,0,0),
-     new PIDController(Constants.kPDriveVel,0,0), drivetrain::tankDriveVolts, drivetrain);
+    // ramseteCommand = new RamseteCommand(exampleTrajectory, drivetrain::getPose, new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta), 
+    // Constants.kFeedforward, Constants.differentialDriveKinematics, drivetrain::getWheelSpeeds, new PIDController(Constants.kPDriveVel,0,0),
+    //  new PIDController(Constants.kPDriveVel,0,0), drivetrain::tankDriveVolts, drivetrain);
 
     // Run path following command, then stop at the end.
     return new Auto(drivetrain, intake_sub, conveyor, limelightAim, shooter, rpmFalcon1, rpmFalcon2);
